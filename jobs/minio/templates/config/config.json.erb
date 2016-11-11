@@ -1,0 +1,14 @@
+<%= JSON.generate({
+    "version": "8",
+    "credential": {
+        "accessKey": p('access_key'),
+        "secretKey": p('secret_key'),
+    },
+    "region": p('region'),
+    "logger": {
+        "console": {
+            "enable": true,
+            "level": "error"
+        }
+    }
+}) %>

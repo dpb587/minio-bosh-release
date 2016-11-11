@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -eux
+
+tar -xzf mc/mc.tar.gz
+mkdir -p go/src/github.com/minio
+mv mc-* go/src/github.com/minio/mc
+
+export GOPATH=$PWD/go
+export GOROOT=/var/vcap/packages/golang
+export PATH="$GOROOT/bin:$PATH"
+
+cd go/src/github.com/minio/mc
+go build main.go
+
+mkdir $BOSH_INSTALL_TARGET/bin
+mv main $BOSH_INSTALL_TARGET/bin/mc

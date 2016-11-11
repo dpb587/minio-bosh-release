@@ -1,0 +1,27 @@
+---
+name: "mc-mirror"
+packages:
+  - "mc"
+templates:
+  bin/run.erb: "bin/run"
+  config/config.json.erb: "config/config.json"
+consumes:
+  - name: "remote"
+    type: "s3"
+properties:
+  direction:
+    description: "Whether to push (update remote with local files) or pull (update local with remote files)"
+    default: "push"
+  path:
+    description: "A local directory which will be mirrored to the remote storage"
+  remote_bucket:
+    description: "The bucket to use on the remote storage"
+  remote_path:
+    description: "A path to use on the remote storage"
+    default: ""
+  force:
+    description: "Force overwrite of existing targets"
+    default: false
+  remove:
+    description: "Remove extraneous files from the target"
+    default: false

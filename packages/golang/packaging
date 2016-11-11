@@ -1,0 +1,5 @@
+#!/bin/bash
+
+set -eux
+
+tar -C $BOSH_INSTALL_TARGET --strip-components 1 -xzf golang/go-linux-amd64.tar.gz

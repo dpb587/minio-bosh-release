@@ -1,0 +1,60 @@
+---
+name: "minio"
+packages:
+  - "minio"
+templates:
+  bin/control.erb: "bin/control"
+  config/config.json.erb: "config/config.json"
+  config/certs/private.key.erb: "config/certs/private.key"
+  config/certs/public.crt.erb: "config/certs/public.crt"
+provides:
+  - name: "storage"
+    type: "s3"
+    properties:
+      - "api"
+      - "scheme"
+      - "port"
+      - "access_key"
+      - "secret_key"
+properties:
+  access_key:
+    description: "Access Key"
+  api:
+    description: "API version (internal; do not change)"
+    default: "S3v4"
+  cache_expiry:
+    description: "Set the object cache expiration duration in NN[h|m|s]"
+    default: "72h"
+  cache_size:
+    description: "Set total cache size in NN[GB|MB|KB]"
+    default: "8GB"
+  max_connections:
+    description: "Limit of the number of concurrent http requests."
+    default: 500
+  port:
+    description: "Listening port"
+    default: 9000
+  region:
+    description: "Logical region of the server"
+    default: "us-east-1"
+  runas.group:
+    description: "Execute as group"
+    default: "vcap"
+  runas.user:
+    description: "Execute as user"
+    default: "vcap"
+  scheme:
+    description: "Whether to serve http or https traffic"
+    default: "https"
+  secret_key:
+    description: "Secret Key"
+  storage_dir:
+    description: "Data directory"
+    default: "/var/vcap/store/minio"
+  tls_cert:
+    description: "Public PEM certificate"
+  tls_key:
+    description: "Private PEM key"
+  web_ui:
+    description: "Enable the web-based user interface"
+    default: true

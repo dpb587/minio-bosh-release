@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -eu
+
+/var/vcap/packages/mc/bin/mc \
+  -C /var/vcap/jobs/mc-mirror/config \
+  --json \
+  --quiet \
+  mb \
+  "remote/<%= p('bucket') %>"

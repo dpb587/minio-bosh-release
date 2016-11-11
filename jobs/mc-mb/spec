@@ -1,0 +1,13 @@
+---
+name: "mc-mb"
+packages:
+  - "mc"
+templates:
+  bin/run.erb: "bin/run"
+  config/config.json.erb: "config/config.json"
+consumes:
+  - name: "remote"
+    type: "s3"
+properties:
+  bucket:
+    description: "The bucket to create"

@@ -1,0 +1,11 @@
+{
+	"version": "8",
+	"hosts": {
+		"remote": {<% r = link('remote') %>
+			"url": "<%= r.p('scheme') %>://<%= r.instances[0].address %>:<%= r.p('port') %>",
+			"accessKey": "<%= r.p('access_key') %>",
+			"secretKey": "<%= r.p('secret_key') %>",
+			"api": "<%= r.p('api') %>"
+		}
+	}
+}

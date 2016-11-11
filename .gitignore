@@ -1,0 +1,5 @@
+/.dev_builds
+/blobs
+/config/private.yml
+/dev_releases
+/releases/*/*.tgz

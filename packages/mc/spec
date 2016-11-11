@@ -1,0 +1,6 @@
+---
+name: "mc"
+dependencies:
+  - "golang"
+files:
+  - "mc/*"

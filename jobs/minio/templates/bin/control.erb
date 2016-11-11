@@ -1,0 +1,70 @@
+#!/bin/bash
+
+set -eu
+
+PIDFILE=/var/vcap/sys/run/minio/minio.pid
+LOGDIR=/var/vcap/sys/log/minio
+RUNAS=<%= p('runas.user') %>:<%= p('runas.group') %>
+
+mkdir -p "$LOGDIR"
+chown $RUNAS "$LOGDIR"
+
+exec >> $LOGDIR/control.log
+exec 2>&1
+
+mkdir -p $( dirname "$PIDFILE" )
+chown vcap:vcap $( dirname "$PIDFILE" )
+
+case $1 in
+
+  start)
+    export MINIO_CACHE_SIZE="<%= p('cache_size') %>"
+    export MINIO_CACHE_EXPIRY="<%= p('cache_expiry') %>"
+    export MINIO_MAXCONN="<%= p('max_connections') %>"
+    export MINIO_BROWSER="<%= p('web_ui') ? 'on' : 'off' %>"
+    export MINIO_SECURE_CONSOLE=0
+
+    mkdir -p "<%= p('storage_dir') %>"
+    chown $RUNAS "<%= p('storage_dir') %>"
+
+    <% if p('scheme') == 'http' then %>
+      rm -f /var/vcap/jobs/minio/config/certs/private.key
+      rm -f /var/vcap/jobs/minio/config/certs/public.crt
+    <% end %>
+
+    /sbin/start-stop-daemon \
+      --background \
+      --pidfile "$PIDFILE" \
+      --make-pidfile \
+      --exec /bin/bash \
+      --start \
+      -- -c "exec chpst -u $RUNAS \
+        /var/vcap/packages/minio/bin/minio \
+          -C /var/vcap/jobs/minio/config \
+          server \
+          --address \"0.0.0.0:<%= p('port') %>\" \
+          \"<%= p('storage_dir') %>\" \
+        >> \"$LOGDIR/stdout.log\" \
+        2>> \"$LOGDIR/stderr.log\" \
+      "
+
+    ;;
+
+  stop)
+    /sbin/start-stop-daemon \
+      --pidfile "$PIDFILE" \
+      --signal TERM \
+      --oknodo \
+      --stop \
+      --retry 15
+
+    ;;
+
+  *)
+    echo "Usage: control {start|stop}" >&2
+
+    exit 1
+
+    ;;
+
+esac

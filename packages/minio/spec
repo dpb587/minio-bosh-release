@@ -1,0 +1,6 @@
+---
+name: "minio"
+dependencies:
+  - "golang"
+files:
+  - "minio/*"

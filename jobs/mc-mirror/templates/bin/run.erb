@@ -1,0 +1,26 @@
+#!/bin/bash
+
+set -eu
+
+<%
+
+endpoints = [
+  p('path'),
+  "remote/#{p('remote_bucket')}/#{p('remote_path')}",
+]
+
+if p('direction') == 'pull' then
+  endpoints.reverse!
+end
+
+%>
+
+/var/vcap/packages/mc/bin/mc \
+  -C /var/vcap/jobs/mc-mirror/config \
+  --json \
+  --quiet \
+  mirror \
+  <%= p('force') ? '--force' : '' %> \
+  <%= p('remove') ? '--remove' : '' %> \
+  "<%= endpoints[0] %>" \
+  "<%= endpoints[1] %>"
