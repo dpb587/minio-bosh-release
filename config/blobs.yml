@@ -1,9 +1,12 @@
 golang/go-linux-amd64.tar.gz:
   size: 82565628
+  object_id: 132ea2d0-ed1b-48bb-5b24-28ba6ff5003f
   sha: ead40e884ad4d6512bcf7b3c7420dd7fa4a96140
 mc/mc.tar.gz:
   size: 824887
+  object_id: 42b0cb64-247f-4b60-5a50-d5ca276f6827
   sha: fd6677738c4cd39c0b9a2328516e69a9685c481d
 minio/minio.tar.gz:
   size: 1441818
+  object_id: e0bdd0a4-f6a4-4e83-4dc1-df7e03d54077
   sha: 556fe8dcf934200c2aef9aaddd4d194d2c09783e
