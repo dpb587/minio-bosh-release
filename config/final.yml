@@ -1,5 +1,7 @@
 ---
 name: "minio"
+description: |
+  A [BOSH](https://bosh.io) release to deploy [minio](https://www.minio.io/), a S3-compatible object storage server.
 blobstore:
   provider: "s3"
   options:

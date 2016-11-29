@@ -1,0 +1,210 @@
+---
+groups:
+  - name: "minio"
+    jobs:
+      - "build"
+      - "bump-major"
+      - "bump-minor"
+      - "bump-patch"
+      - "integration-test"
+      - "promote"
+jobs:
+  - name: "build"
+    serial_groups:
+      - "version"
+    plan:
+      - get: "working-tree"
+        resource: "dev-repository"
+        trigger: true
+      - get: "downloads"
+      - do:
+          - get: "version"
+          - put: "version"
+            params:
+              pre: "dev"
+              path: "version/number"
+      - task: "create-release"
+        file: "working-tree/ci/tasks/create-release/config.yml"
+        params:
+          download_prefix: "https://s3.amazonaws.com/dpb587-minio-bosh-release-us-east-1/dev_releases/"
+          git_user_email: "((git_user_email))"
+          git_user_name: "((git_user_name))"
+      - do:
+          - put: "downloads"
+            params:
+              rebase: true
+              repository: "downloads"
+          - put: "dev-bosh-release-tarball"
+            params:
+              file: "bosh-release/*.tgz"
+  - name: "integration-test"
+    serial: true
+    plan:
+      - get: "bosh-release"
+        resource: "dev-bosh-release-tarball"
+        passed:
+          - "build"
+        trigger: true
+      - aggregate:
+          - get: "working-tree"
+            resource: "dev-repository"
+            passed:
+             - "build"
+          - get: "version"
+            passed:
+              - "build"
+          - get: "bosh-stemcell"
+            resource: "bosh-ubuntu-trusty-stemcell"
+          - get: "bosh-deployment"
+      - do:
+          - task: "create-bosh-director"
+            file: "working-tree/ci/tasks/create-bosh-director/config.yml"
+            params:
+              iaas: ((bosh_director_iaas))
+              iaas_config: ((bosh_director_iaas_config))
+          - task: "integration-test"
+            file: "working-tree/ci/tasks/integration-test/config.yml"
+        ensure:
+          task: "destroy-bosh-director"
+          file: "working-tree/ci/tasks/destroy-bosh-director/config.yml"
+  - name: "promote"
+    serial_groups:
+      - "version"
+    plan:
+      - aggregate:
+          - get: "working-tree"
+            resource: "dev-repository"
+            passed:
+              - "integration-test"
+          - get: "dev-bosh-release-tarball"
+            passed:
+              - "integration-test"
+          - get: "version"
+            passed:
+              - "integration-test"
+            params:
+              bump: "final"
+          - get: "dev-working-tree"
+            resource: "dev-repository"
+          - get: "final-working-tree"
+            resource: "repository"
+          - get: "downloads"
+      - task: "finalize-release"
+        file: "working-tree/ci/tasks/finalize-release/config.yml"
+        params:
+          blobstore_access_key: ((blobstore.options.access_key_id))
+          blobstore_secret_key: ((blobstore.options.secret_access_key))
+          download_prefix: "https://s3.amazonaws.com/dpb587-minio-bosh-release-us-east-1/releases/"
+          git_user_email: "((git_user_email))"
+          git_user_name: "((git_user_name))"
+      - do:
+          - put: "repository"
+            params:
+              repository: "final-working-tree"
+              tag: "release/tag"
+          - put: "dev-repository"
+            params:
+              repository: "dev-working-tree"
+          - put: "downloads"
+            params:
+              rebase: true
+              repository: "downloads"
+          - put: "bosh-release-tarball"
+            params:
+              file: "bosh-release-tarball/*.tgz"
+          - put: "version"
+            params:
+              bump: "patch"
+              file: "version/number"
+          - put: "release"
+            params:
+              name: "release/tag"
+              tag: "release/tag"
+              commitish: "release/commit"
+              body: "release/notes.md"
+              globs:
+                - "bosh-release-tarball/*.tgz"
+  - name: "bump-major"
+    plan:
+      - get: "version"
+        params:
+          bump: "major"
+      - put: "version"
+        params:
+          file: "version/number"
+  - name: "bump-minor"
+    plan:
+    - get: "version"
+      params:
+        bump: "minor"
+    - put: "version"
+      params:
+        file: "version/number"
+  - name: "bump-patch"
+    plan:
+      - get: "version"
+        params:
+          bump: "patch"
+      - put: "version"
+        params:
+          file: "version/number"
+resources:
+  - name: "version"
+    type: "semver"
+    source:
+      bucket: "dpb587-minio-bosh-release-us-east-1"
+      key: "version"
+      access_key_id: "((blobstore.options.access_key_id))"
+      secret_access_key: "((blobstore.options.secret_access_key))"
+  - name: "dev-repository"
+    type: "git"
+    source:
+      uri: "git@github.com:dpb587/minio-bosh-release.git"
+      branch: "master"
+      private_key: "((git_ssh_key.private_key))"
+  - name: "dev-bosh-release-tarball"
+    type: "s3"
+    source:
+      bucket: "dpb587-minio-bosh-release-us-east-1"
+      regexp: "dev_releases/minio-(\\d+\\.\\d+\\.\\d+.*).tgz"
+      access_key_id: "((blobstore.options.access_key_id))"
+      secret_access_key: "((blobstore.options.secret_access_key))"
+  - name: "repository"
+    type: "git"
+    source:
+      uri: "git@github.com:dpb587/minio-bosh-release.git"
+      branch: "final"
+      private_key: "((git_ssh_key.private_key))"
+  - name: "bosh-release-tarball"
+    type: "s3"
+    source:
+      bucket: "dpb587-minio-bosh-release-us-east-1"
+      regexp: "releases/minio-(\\d+\\.\\d+\\.\\d+).tgz"
+      access_key_id: "((blobstore.options.access_key_id))"
+      secret_access_key: "((blobstore.options.secret_access_key))"
+  - name: "release"
+    type: "github-release"
+    source:
+      user: "dpb587"
+      repository: "minio-bosh-release"
+      access_token: "((github_access_token))"
+  - name: "downloads"
+    type: "git"
+    source:
+      uri: "git@github.com:dpb587/minio-bosh-release.git"
+      branch: "downloads"
+      private_key: "((git_ssh_key.private_key))"
+  - name: "bosh-ubuntu-trusty-stemcell"
+    type: "bosh-io-stemcell"
+    source:
+      name: "bosh-((bosh_director_iaas))-((bosh_director_hypervisor))-ubuntu-trusty-go_agent"
+  - name: "bosh-deployment"
+    type: "git"
+    source:
+      uri: "git@github.com:cloudfoundry/bosh-deployment.git"
+      private_key: "((git_ssh_key.private_key))"
+variables:
+  - name: "git_ssh_key"
+    type: "ssh"
+  - name: "aws_ec2_ssh_keypair"
+    type: "ssh"

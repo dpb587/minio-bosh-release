@@ -1,0 +1,6 @@
+- type: "replace"
+  path: "/networks/name=default/subnets/0/reserved?/-"
+  value: "((internal_gw))/30"
+- type: "replace"
+  path: "/vm_types/name=default/cloud_properties/instance_type"
+  value: "t2.medium"

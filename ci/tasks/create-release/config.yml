@@ -1,0 +1,21 @@
+---
+platform: "linux"
+image_resource:
+  type: "docker-image"
+  source:
+    repository: "dpb587/minio-bosh-release"
+    tag: "ci-main"
+inputs:
+  - name: "working-tree"
+  - name: "downloads"
+  - name: "version"
+outputs:
+  - name: "bosh-release"
+  - name: "downloads"
+    path: "downloads-output"
+run:
+  path: "working-tree/ci/tasks/create-release/execute.sh"
+params:
+  download_prefix: ~
+  git_user_email: ~
+  git_user_name: ~

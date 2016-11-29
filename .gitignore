@@ -1,5 +1,7 @@
 /.dev_builds
 /blobs
+/ci/id_rsa*
 /config/private.yml
 /dev_releases
 /releases/*/*.tgz
+/*.tfstate*

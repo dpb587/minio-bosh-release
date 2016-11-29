@@ -1,6 +1,6 @@
 # minio-bosh-release
 
-A S3-compatible object storage server backed by [minio](https://www.minio.io/).
+A [BOSH](https://bosh.io) release to deploy [minio](https://www.minio.io/), a S3-compatible object storage server.
 
 
 ## Usage
@@ -57,6 +57,31 @@ The `mc-*` job *consumes* a link of type `s3` named `storage`. Ensure a link is 
               port: 443
               scheme: "https"
               secret_key: "a1b2c3d4e5f6g7h"
+
+
+## Development
+
+**Branches**
+
+ * `master` - active work
+ * `final` - finalized releases
+ * `downloads` - published artifacts
+
+**Secrets**
+
+    $ lpass show --notes -G 'minio-bosh-release/terraform.tfstate' > terraform.tfstate
+    $ lpass show --notes -G 'minio-bosh-release/config/private.yml' > config/private.yml
+
+**Concourse**
+
+    $ fly set-pipeline -p dpb587:minio-bosh-release -c <( bosh interpolate --vars-store config/private.yml ci/pipeline.yml )
+    $ echo -n 0.0.0 > version ; aws s3api put-object --bucket dpb587-minio-bosh-release-us-east-1 --key version --body version ; rm version
+
+**Terraform**
+
+    $ export TF_VAR_ssh_public_key="$( bosh interpolate --path /aws_ec2_ssh_keypair/public_key config/private.yml )"
+    $ terraform apply
+    $ bosh interpolate --ops-file <( terraform output -json | jq '[{"type":"replace","path":"/blobstore?/options/access_key_id","value":.aws_access_key.value},{"type":"replace","path":"/blobstore?/options/secret_access_key","value":.aws_secret_key.value}]' ) config/private.yml > config/private2.yml && mv config/private2.yml config/private.yml
 
 
 ## License
