@@ -1,5 +1,5 @@
 ---
-name: "minio"
+name: "subject"
 releases:
   - name: "minio"
     version: "latest"
@@ -26,14 +26,49 @@ instance_groups:
           scheme: "http"
           access_key: "aDifferentAccessKey"
           secret_key: "aDifferentSecretKey"
+  - name: "make-bucket"
+    lifecycle: "errand"
+    instances: 1
+    vm_type: "default"
+    stemcell: "default"
+    networks:
+      - name: "default"
+    azs:
+      - "z1"
+    jobs:
       - name: "mc-mb"
         release: "minio"
         properties:
           bucket: "minio-logs"
+  - name: "mirror-push"
+    lifecycle: "errand"
+    instances: 1
+    vm_type: "default"
+    stemcell: "default"
+    networks:
+      - name: "default"
+    azs:
+      - "z1"
+    jobs:
       - name: "mc-mirror"
         release: "minio"
         properties:
-          path: "/var/vcap/bosh/log/"
+          path: "/var/vcap/bosh/bin/"
+          remote_bucket: "minio-logs"
+  - name: "mirror-pull"
+    instances: 1
+    vm_type: "default"
+    stemcell: "default"
+    networks:
+      - name: "default"
+    azs:
+      - "z1"
+    jobs:
+      - name: "mc-mirror"
+        release: "minio"
+        properties:
+          direction: "pull"
+          path: "/var/vcap/data/mirror-pull/"
           remote_bucket: "minio-logs"
 update:
   canaries: 1

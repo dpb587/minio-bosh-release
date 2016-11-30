@@ -1,0 +1,17 @@
+#!/bin/sh
+
+set -eu
+
+director_dir="${1:-$PWD}"
+
+export BOSH_ENVIRONMENT=default
+
+bosh \
+  --environment "$( cat $director_dir/ip )" \
+  --ca-cert $director_dir/ca.crt \
+  alias-env "$BOSH_ENVIRONMENT"
+
+BOSH_PASSWORD="$( cat $director_dir/password )" \
+bosh --user "$( cat $director_dir/username )" log-in
+
+unset director_dir

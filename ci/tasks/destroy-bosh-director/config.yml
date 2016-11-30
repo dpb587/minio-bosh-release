@@ -1,0 +1,12 @@
+---
+platform: "linux"
+image_resource:
+  type: "docker-image"
+  source:
+    repository: "dpb587/minio-bosh-release"
+    tag: "ci-main"
+inputs:
+  - name: "working-tree"
+  - name: "bosh-director"
+run:
+  path: "working-tree/ci/tasks/destroy-bosh-director/execute.sh"

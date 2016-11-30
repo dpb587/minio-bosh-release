@@ -1,0 +1,41 @@
+#!/bin/sh
+
+set -eu -o pipefail
+
+path="$1"
+downloads="$2"
+
+name="$( basename "$path" )"
+
+jq -S \
+  --arg name "$name" \
+  --arg time "$( date -r $path -u +%Y-%m-%dT%H:%M:%SZ )" \
+  --arg size "$( stat -c %s $path )" \
+  --arg md5 "$( openssl md5 -r $path | awk '{ print $1 }' )" \
+  --arg sha1 "$( openssl sha1 -r $path | awk '{ print $1 }' )" \
+  --arg sha256 "$( openssl sha256 -r $path | awk '{ print $1 }' )" \
+  --arg sha512 "$( openssl sha512 -r $path | awk '{ print $1 }' )" \
+  '
+    . + {
+      "digest": {
+        "md5": $md5,
+        "sha1": $sha1,
+        "sha256": $sha256,
+        "sha512": $sha512
+      },
+      "name": $name,
+      "size": ($size | tonumber),
+      "time": $time
+    }
+  ' \
+  | tee "$downloads/$name.json"
+
+cd "$downloads"
+
+git config user.email "${git_user_email:-ci@localhost}"
+git config user.name "${git_user_name:-CI Bot}"
+export GIT_COMMITTER_NAME="Concourse"
+export GIT_COMMITTER_EMAIL="concourse.ci@localhost"
+
+git add "$name.json"
+git commit -m "$name" "$name.json"

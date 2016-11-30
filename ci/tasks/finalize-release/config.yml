@@ -1,0 +1,31 @@
+---
+platform: "linux"
+image_resource:
+  type: "docker-image"
+  source:
+    repository: "dpb587/minio-bosh-release"
+    tag: "ci-main"
+inputs:
+  - name: "working-tree"
+  - name: "dev-working-tree"
+  - name: "final-working-tree"
+  - name: "dev-bosh-release-tarball"
+  - name: "version"
+  - name: "downloads"
+outputs:
+  - name: "release"
+  - name: "bosh-release-tarball"
+  - name: "final-working-tree"
+    path: "updated-final-working-tree"
+  - name: "dev-working-tree"
+    path: "updated-dev-working-tree"
+  - name: "downloads"
+    path: "downloads-output"
+run:
+  path: "working-tree/ci/tasks/finalize-release/execute.sh"
+params:
+  blobstore_access_key: ~
+  blobstore_secret_key: ~
+  download_prefix: ~
+  git_user_email: ~
+  git_user_name: ~

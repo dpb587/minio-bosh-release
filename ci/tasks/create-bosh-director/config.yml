@@ -1,0 +1,17 @@
+---
+platform: "linux"
+image_resource:
+  type: "docker-image"
+  source:
+    repository: "dpb587/minio-bosh-release"
+    tag: "ci-main"
+inputs:
+  - name: "working-tree"
+  - name: "bosh-deployment"
+outputs:
+  - name: "bosh-director"
+run:
+  path: "working-tree/ci/tasks/create-bosh-director/execute.sh"
+params:
+  iaas: ~
+  iaas_config: ~
