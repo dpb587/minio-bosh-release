@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <title>minio BOSH Release</title>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+        <style type="text/css">
+            pre {
+                background-color: #F7F7F9;
+                border: #E9E9E9 solid 1px;
+                padding: 0.2rem 0.3rem;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+                <div class="clearfix" style="padding:1.25rem 1rem 1rem;">
+        <nav>
+            <ul class="nav nav-inline float-xs-right" style="margin-top:0.5rem;">
+                <li class="nav-item">
+                    <a class="nav-link text-muted" href="./"><i class="fa fa-home"></i> bosh release</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/dpb587/minio-bosh-release"><i class="fa fa-github"></i> repository</a>
+                </li>
+            </ul>
+        </nav>
+        <h1>minio</h1>
+        <p>A <a href="https://bosh.io">BOSH</a> release to deploy <a href="https://www.minio.io/">minio</a>, a S3-compatible object storage server.</p>
+
+    </div>
+                <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                                                            <div class="card">
+                            <div class="card-header">
+                                <div class="pull-right text-muted">
+                                    <a class="text-muted" href="https://github.com/dpb587/minio-bosh-release/releases/tag/v1.1.0">v1.1.0</a>
+                                    &middot;
+                                    <time datetime="2016-11-29T07:38:34+00:00" title="2016-11-29T07:38:34+00:00">2016-11-29</time>
+                                </div>
+                                <a href="./v1.1.0/">Release 1.1.0</a>
+                                <span class="text-muted">(latest)</span>
+                            </div>
+                            <div class="card-block">
+                                                                <p class="card-text">
+                                    <small class="text-muted">Jobs: <a href="./v1.1.0/mc-mb-job.html">mc-mb</a>, <a href="./v1.1.0/mc-mirror-job.html">mc-mirror</a>, <a href="./v1.1.0/minio-job.html">minio</a></small><br />
+                                    <small class="text-muted">Packages: <a href="./v1.1.0/golang-package.html">golang</a>, <a href="./v1.1.0/mc-package.html">mc</a>, <a href="./v1.1.0/minio-package.html">minio</a></small><br />
+                                </p>
+                            </div>
+                                                            <div class="card-block" style="background-color:#FCFCFC;border-top:1px solid rgba(0,0,0,.125);font-family:Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace;">
+                                    $ bosh upload-release \<br />
+                                    &nbsp;&nbsp;--sha1 16ace6da921f488283199168abd24de5448b3636 \<br />                                    &nbsp;&nbsp;https://s3.amazonaws.com/dpb587-minio-bosh-release-us-east-1/releases/minio-1.1.0.tgz
+                                </div>
+                                                    </div>
+                                                                                <div class="card">
+                            <div class="card-header">
+                                <div class="pull-right text-muted">
+                                    <a class="text-muted" href="https://github.com/dpb587/minio-bosh-release/releases/tag/v1.0.0">v1.0.0</a>
+                                    &middot;
+                                    <time datetime="2016-11-11T05:25:45+00:00" title="2016-11-11T05:25:45+00:00">2016-11-11</time>
+                                </div>
+                                <a href="./v1.0.0/">Release 1.0.0</a>
+                            </div>
+                                                            <div class="card-block">
+                                    <div class="card-text">
+                                        <p>Initial release with support for running a S3-compatible server, primarily useful for development and firewalled environments.</p>
+
+                                    </div>
+                                </div>
+                                                    </div>
+                                                </div>
+        </div>
+    </div>
+                            <div class="row">
+                    <div class="col-sm-12">
+                        <footer class="text-xs-center" style="margin-top:2rem;padding-bottom:4px;">
+                            <small class="text-muted">
+                                <a class="text-muted" href="https://github.com/dpb587/bosh-valise-site" title="Generated with"><i class="fa fa-trophy"></i> valise (v3.2.7)</a>
+                                &nbsp;&middot;&nbsp;
+                                <a class="text-muted" href="https://dpb587.me/" target="_blank" title="Created by"><i class="fa fa-hand-peace-o"></i> dpb587</a>
+                            </small>
+                        </footer>
+                    </div>
+                </div>
+                    </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha384-THPy051/pYDQGanwU6poAc/hOdQxjnOEXzbT+OuUAFqNqFjL+4IGLBgCJC3ZOShY" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.2.0/js/tether.min.js" integrity="sha384-Plbmg8JY28KFelvJVai01l8WyZzrYWG825m+cZ0eDDS1f7d/js6ikvy1+X+guPIB" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
+    </body>
+</html>
