@@ -1,0 +1,30 @@
+{
+  "digest": {
+    "md5": "678e8d0d3911ac56f5624337f5b9bc13",
+    "sha1": "9827c8a925d3048a5f53c28a5cf9f022297b3c49",
+    "sha256": "982a350a67089648589b02c5c4ab7a5b07a033427795254b929ad8b3e6272be8",
+    "sha512": "95e42363cb7759d7df2e6286a6423bc40047c4cd36339b951c1ffe73ec94b185d1662abc6b2f6b4a5ded272684690cd80f81d58bce0bee668f7c46cbaad16cee"
+  },
+  "metadata": [
+    {
+      "key": "stability",
+      "value": "dev"
+    },
+    {
+      "key": "type",
+      "value": "bosh-source-release"
+    },
+    {
+      "key": "version",
+      "value": "1.1.0-dev.2"
+    }
+  ],
+  "name": "minio-1.1.0-dev.2.tgz",
+  "origin": [
+    {
+      "uri": "https://s3.amazonaws.com/dpb587-minio-bosh-release-us-east-1/dev_releases/minio-1.1.0-dev.2.tgz"
+    }
+  ],
+  "size": 84544392,
+  "time": "2016-11-30T08:40:55Z"
+}
