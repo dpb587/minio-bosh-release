@@ -1,3 +1,7 @@
+**Deprecated**. There is now an official BOSH release available from [minio/minio-boshrelease](https://github.com/minio/minio-boshrelease). This was created before that release was available.
+
+---
+
 # minio-bosh-release
 
 A [BOSH](https://bosh.io) release to deploy [minio](https://www.minio.io/), a S3-compatible object storage server.
